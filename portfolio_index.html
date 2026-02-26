@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ankush Chakraborty — GIS & Spatial Intelligence Expert</title>
+    <meta name="description"
+        content="Portfolio of Ankush Chakraborty — GIS Analyst, Geoinformatics specialist, and spatial intelligence expert. Explore projects, skills, and experience in geospatial technology.">
+    <meta name="keywords"
+        content="GIS, Geoinformatics, Remote Sensing, Spatial Analysis, ArcGIS, QGIS, Portfolio, Ankush Chakraborty">
+    <meta name="author" content="Ankush Chakraborty">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Cursor glow effect -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Floating particles background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Ambient Audio Player -->
+    <audio id="ambientAudio" loop>
+        <source src="ambient-background.mp3" type="audio/mpeg">
+    </audio>
+    <button class="audio-toggle" id="audioToggle" aria-label="Toggle ambient music">
+        <svg class="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <svg class="icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <rect x="6" y="4" width="4" height="16"></rect>
+            <rect x="14" y="4" width="4" height="16"></rect>
+        </svg>
+        <span>Music</span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" stroke="url(#logoGrad)" stroke-width="2" fill="none" />
+                    <path d="M20 6 C20 6, 34 20, 20 34 C6 20, 20 6, 20 6Z" fill="url(#logoGrad)" opacity="0.3" />
+                    <circle cx="20" cy="20" r="4" fill="url(#logoGrad)" />
+                    <line x1="20" y1="2" x2="20" y2="10" stroke="url(#logoGrad)" stroke-width="1.5"
+                        stroke-linecap="round" />
+                    <line x1="20" y1="30" x2="20" y2="38" stroke="url(#logoGrad)" stroke-width="1.5"
+                        stroke-linecap="round" />
+                    <line x1="2" y1="20" x2="10" y2="20" stroke="url(#logoGrad)" stroke-width="1.5"
+                        stroke-linecap="round" />
+                    <line x1="30" y1="20" x2="38" y2="20" stroke="url(#logoGrad)" stroke-width="1.5"
+                        stroke-linecap="round" />
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40">
+                            <stop offset="0%" stop-color="#00d4ff" />
+                            <stop offset="100%" stop-color="#7c3aed" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>AC</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#experience" class="nav-link">Experience</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#education" class="nav-link">Education</a>
+                <a href="#certifications" class="nav-link">Certifications</a>
+                <a href="Ankush_Chakraborty_Resume.pdf" class="nav-link" download
+                    onclick="trackResumeDownload()">Resume</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-gradient-orb hero-orb-1"></div>
+        <div class="hero-gradient-orb hero-orb-2"></div>
+        <div class="hero-gradient-orb hero-orb-3"></div>
+        <div class="hero-inner">
+            <div class="hero-content">
+                <div class="hero-badge reveal">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                        <path d="M2 12h20" />
+                    </svg>
+                    <span>GIS & Spatial Intelligence</span>
+                </div>
+                <h1 class="hero-title reveal">
+                    <span class="hero-greeting" id="heroGreeting">Hello, I'm</span>
+                    <span class="hero-name">Ankush<br>Chakraborty</span>
+                </h1>
+                <h2>
+                    <span class="hero-roles">
+                        Cartographer • GIS Analyst • Remote Sensing Specialist
+                    </span>
+                </h2>
+                <p class="hero-subtitle reveal">
+                    Transforming geospatial data into actionable intelligence. Specializing in
+                    <span class="text-gradient">Remote Sensing</span>,
+                    <span class="text-gradient">Spatial Analysis</span>, and
+                    <span class="text-gradient">GIS Modeling</span>.
+                </p>
+                <div class="hero-location reveal">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
+                    <span>Pune, Maharashtra &middot; From Kolkata, West Bengal</span>
+                </div>
+                <div class="hero-cta reveal">
+                    <a href="#contact" class="btn btn-primary" id="heroPrimaryCTA">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                        Get in Touch
+                    </a>
+                    <a href="#projects" class="btn btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        View Projects
+                    </a>
+                    <a href="Ankush_Chakraborty_Resume.pdf" class="btn btn-secondary" download
+                        onclick="trackResumeDownload()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Download Resume
+                    </a>
+                </div>
+                <div class="hero-stats reveal">
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="12">0</span><span class="stat-suffix">+</span>
+                        <span class="stat-label"> Tools</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="3">0</span><span class="stat-suffix">+</span>
+                        <span class="stat-label">Certifications</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="2">0</span><span class="stat-suffix">+</span>
+                        <span class="stat-label">Major Projects</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Hero Photo -->
+            <div class="hero-visual reveal">
+                <div class="hero-photo-wrap">
+                    <div class="photo-ring photo-ring-1"></div>
+                    <div class="photo-ring photo-ring-2"></div>
+                    <div class="photo-glow"></div>
+                    <div class="photo-orbit">
+                        <div class="orbit-dot orbit-dot-1"></div>
+                        <div class="orbit-dot orbit-dot-2"></div>
+                    </div>
+                    <div class="photo-frame">
+                        <img src="ankush.png" alt="Ankush Chakraborty — GIS &amp; Spatial Intelligence Expert"
+                            class="hero-photo" />
+                    </div>
+                </div>
+            </div>
+        </div><!-- end hero-inner -->
+
+        <div class="scroll-indicator reveal">
+            <div class="scroll-line"></div>
+            <span>Scroll to explore</span>
+        </div>
+    </section>
+    ```
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">01 — About</span>
+                <h2 class="section-title">Professional <span class="text-gradient">Summary</span></h2>
+            </div>
+            <div class="about-grid">
+                <div class="about-text reveal">
+                    <p>Results-driven <strong>GIS Analyst</strong> with practical experience at Vasundharaa Geo
+                        Technologies, Pune, focused on geospatial data processing, remote sensing, and spatial analysis.
+                    </p>
+                    <p>Proficient in industry-standard GIS software including <strong>ArcGIS Pro, QGIS, and Google Earth
+                            Pro</strong>, with hands-on skills in map creation, spatial modeling, and raster-vector data
+                        conversion.</p>
+                    <p>Demonstrated expertise in <strong>satellite image classification, forest fire risk
+                            assessment</strong>, and training data preparation for machine learning models. Skilled in
+                        georeferencing, digitization, DEM processing, and layer reclassification.</p>
+                    <p>Collaborative team player with experience in <strong>environmental monitoring, urban analysis,
+                            and decision support systems</strong>.</p>
+                </div>
+                <div class="about-highlights reveal">
+                    <div class="highlight-card">
+                        <svg class="highlight-icon" viewBox="0 0 24 24" fill="none" stroke="url(#iconGrad1)"
+                            stroke-width="1.5">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                            <defs>
+                                <linearGradient id="iconGrad1" x1="0" y1="0" x2="24" y2="24">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="100%" stop-color="#7c3aed" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <h3>Spatial Analysis</h3>
+                        <p>Advanced geospatial processing & environmental monitoring</p>
+                    </div>
+                    <div class="highlight-card">
+                        <svg class="highlight-icon" viewBox="0 0 24 24" fill="none" stroke="url(#iconGrad1)"
+                            stroke-width="1.5">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" />
+                            <line x1="12" y1="17" x2="12" y2="21" />
+                        </svg>
+                        <h3>Remote Sensing</h3>
+                        <p>Satellite imagery classification & change detection</p>
+                    </div>
+                    <div class="highlight-card">
+                        <svg class="highlight-icon" viewBox="0 0 24 24" fill="none" stroke="url(#iconGrad1)"
+                            stroke-width="1.5">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                        <h3>ML Data Prep</h3>
+                        <p>Training data for deep learning & machine learning models</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="section experience" id="experience">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">02 — Experience</span>
+                <h2 class="section-title">Professional <span class="text-gradient">Journey</span></h2>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item reveal">
+                    <div class="timeline-marker">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-line"></div>
+                    </div>
+                    <div class="timeline-content glass-card">
+                        <div class="timeline-header">
+                            <div>
+                                <h3 class="timeline-title">GIS Intern</h3>
+                                <p class="timeline-company">Vasundharaa Geo Technologies Pvt. Ltd.</p>
+                            </div>
+                            <div class="timeline-meta">
+                                <span class="timeline-date">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                        <line x1="16" y1="2" x2="16" y2="6" />
+                                        <line x1="8" y1="2" x2="8" y2="6" />
+                                        <line x1="3" y1="10" x2="21" y2="10" />
+                                    </svg>
+                                    Jan 2025 – Apr 2025
+                                </span>
+                                <span class="timeline-location">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    Pune, India
+                                </span>
+                            </div>
+                        </div>
+                        <ul class="timeline-details">
+                            <li>Executed forest fire classification and frequency analysis using remote sensing data
+                            </li>
+                            <li>Prepared high-quality training datasets for deep learning and machine learning models
+                            </li>
+                            <li>Conducted geospatial data processing and spatial analysis for urban and environmental
+                                studies</li>
+                            <li>Performed digitization, map design, and spatial modeling for web-based applications</li>
+                            <li>Utilized raster-vector conversion and layer reclassification to streamline GIS workflows
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section skills" id="skills">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">03 — Skills</span>
+                <h2 class="section-title">Technical <span class="text-gradient">Skills</span></h2>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category glass-card reveal">
+                    <div class="skill-cat-header">
+                        <svg class="skill-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                            <path d="M2 12h20" />
+                        </svg>
+                        <h3>GIS Software</h3>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag">ArcGIS Pro</span>
+                        <span class="skill-tag">QGIS</span>
+                        <span class="skill-tag">Google Earth Pro</span>
+                        <span class="skill-tag">ERDAS IMAGINE</span>
+                        <span class="skill-tag">Google Earth Engine (Basic)</span>
+                        <span class="skill-tag">Geoserver</span>
+                    </div>
+                </div>
+                <div class="skill-category glass-card reveal">
+                    <div class="skill-cat-header">
+                        <svg class="skill-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        <h3>Surveying Data & Acquisition </h3>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Total Station</span>
+                        <span class="skill-tag">GPS</span>
+                        <span class="skill-tag">DGPS</span>
+                        <span class="skill-tag">UAV</span>
+                        <span class="skill-tag">Mission Planner</span>
+                        <span class="skill-tag">GeoSetter</span>
+                    </div>
+                </div>
+                <div class="skill-category glass-card reveal">
+                    <div class="skill-cat-header">
+                        <svg class="skill-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <ellipse cx="12" cy="5" rx="9" ry="3" />
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                        </svg>
+                        <h3>Database & Analytics</h3>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag">SQL (Basic)</span>
+                        <span class="skill-tag">Tableau</span>
+                        <span class="skill-tag">Power BI</span>
+
+                        <span class="skill-tag">Microsoft Office</span>
+                    </div>
+                </div>
+                <div class="skill-category glass-card reveal">
+                    <div class="skill-cat-header">
+                        <svg class="skill-cat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <h3>Soft Skills</h3>
+                    </div>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Team Leadership</span>
+                        <span class="skill-tag">Time Management</span>
+                        <span class="skill-tag">Adaptability</span>
+                        <span class="skill-tag">Collaboration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section projects" id="projects">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">04 — Projects</span>
+                <h2 class="section-title">Featured <span class="text-gradient">Work</span></h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card glass-card reveal">
+                    <div class="project-number">01</div>
+                    <div class="project-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="url(#projGrad)" stroke-width="1.5">
+                            <circle cx="24" cy="24" r="20" />
+                            <path d="M24 4a30 30 0 0 0 0 40M24 4a30 30 0 0 1 0 40M4 24h40M6 14h36M6 34h36" />
+                            <defs>
+                                <linearGradient id="projGrad" x1="0" y1="0" x2="48" y2="48">
+                                    <stop offset="0%" stop-color="#00d4ff" />
+                                    <stop offset="100%" stop-color="#7c3aed" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h3 class="project-title">GIS-based assessment of transportation network impacts on air quality,
+                        climate vulnerability, and public health. </h3>
+
+                    <p class="project-desc">This study develops a multi-layer geospatial intelligence framework to
+                        evaluate the environmental and health impacts of transportation infrastructure in Kolkata.</p>
+                    <ul class="project-details">
+                        <li>Assessed impacts of transportation networks on air quality, climate vulnerability, and
+                            public health</li>
+                        <li>Analyzed spatial correlations between traffic density and environmental health indicators
+                            using GIS</li>
+                    </ul>
+                    <div class="project-tech">
+                        <span>GIS Analysis</span>
+                        <span>Air Quality</span>
+                        <span>Health Mapping</span>
+                    </div>
+                </div>
+                <div class="project-card glass-card reveal">
+                    <div class="project-number">02</div>
+                    <div class="project-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="url(#projGrad)" stroke-width="1.5">
+                            <rect x="6" y="6" width="36" height="36" rx="4" />
+                            <path d="M6 18h36M18 6v36" />
+                            <circle cx="30" cy="30" r="6" />
+                            <path d="M34 34l6 6" />
+                        </svg>
+                    </div>
+                    <h3 class="project-title">Spatio-Temporal Change Detection — Mukutmanipur (2014–2024)</h3>
+                    <p class="project-desc">Decadal land cover change analysis using multi-temporal Landsat 8 imagery,
+                        remote sensing indices, and 3D terrain modeling.</p>
+                    <ul class="project-details">
+                        <li>Analyzed decadal land cover changes using multi-temporal Landsat 8 imagery and QGIS</li>
+                        <li>Integrated remote sensing indices with 3D terrain modeling and contour mapping</li>
+                    </ul>
+                    <div class="project-tech">
+                        <span>Landsat 8</span>
+                        <span>QGIS</span>
+                        <span>3D Modeling</span>
+                    </div>
+                </div>
+                <div class="project-card glass-card reveal">
+                    <div class="project-number">03</div>
+                    <div class="project-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="url(#projGrad)" stroke-width="1.5">
+                            <path d="M8 40V16l16-12 16 12v24H8z" />
+                            <rect x="18" y="26" width="12" height="14" />
+                            <path d="M20 20h8" />
+                        </svg>
+                    </div>
+                    <h3 class="project-title">Conference Presentation — GTSL 2026</h3>
+                    <p class="project-desc">National Conference on Geospatial Technologies and Sustainable Landscapes,
+                        Department of Geography (Geoinformatics), Savitribai Phule Pune University.</p>
+                    <ul class="project-details">
+                        <li>Presented research at a national-level conference on geospatial technologies</li>
+                        <li>Engaged with academic peers and industry professionals on sustainable landscape analysis
+                        </li>
+                    </ul>
+                    <div class="project-tech">
+                        <span>Research</span>
+                        <span>Conference</span>
+                        <span>Feb 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="section education" id="education">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">05 — Education</span>
+                <h2 class="section-title">Academic <span class="text-gradient">Background</span></h2>
+            </div>
+            <div class="education-grid">
+                <div class="edu-card glass-card reveal">
+                    <div class="edu-year">Expected 2026</div>
+                    <h3 class="edu-degree">M.Sc. in Geoinformatics</h3>
+                    <p class="edu-institution">Savitribai Phule Pune University</p>
+                    <p class="edu-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Pune, India
+                    </p>
+                </div>
+                <div class="edu-card glass-card reveal">
+                    <div class="edu-year">2024</div>
+                    <h3 class="edu-degree">B.Sc. (Hons) in Geography</h3>
+                    <p class="edu-institution">University of Calcutta</p>
+                    <p class="edu-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Kolkata, India
+                    </p>
+                </div>
+                <div class="edu-card glass-card reveal">
+                    <div class="edu-year">2021</div>
+                    <h3 class="edu-degree">Class XII</h3>
+                    <p class="edu-institution">West Bengal Council of Higher Secondary Education</p>
+                    <p class="edu-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Kolkata, India
+                    </p>
+                </div>
+                <div class="edu-card glass-card reveal">
+                    <div class="edu-year">2019</div>
+                    <h3 class="edu-degree">Class X</h3>
+                    <p class="edu-institution">West Bengal Council of Secondary Education</p>
+                    <p class="edu-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        Kolkata, India
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section class="section certifications" id="certifications">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">06 — Certifications</span>
+                <h2 class="section-title">Credentials & <span class="text-gradient">Training</span></h2>
+            </div>
+            <div class="cert-list">
+                <div class="cert-item glass-card reveal">
+                    <div class="cert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <div class="cert-info">
+                        <h3>Advanced Geospatial Technology & Its Application Research</h3>
+                        <p>IIARI &middot; July 2024</p>
+                    </div>
+                </div>
+                <div class="cert-item glass-card reveal">
+                    <div class="cert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <div class="cert-info">
+                        <h3>QGIS and Its Applications</h3>
+                        <p>IIARI &middot; May 2024</p>
+                    </div>
+                </div>
+                <div class="cert-item glass-card reveal">
+                    <div class="cert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <div class="cert-info">
+                        <h3>Information Technology Certification</h3>
+                        <p>Ramakrishna Vivekananda Mission &middot; 2018</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Info Section -->
+    <section class="section additional" id="additional">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">07 — Beyond Work</span>
+                <h2 class="section-title">Life <span class="text-gradient">Beyond Maps</span></h2>
+            </div>
+            <div class="additional-grid">
+                <div class="add-card glass-card reveal">
+                    <div class="add-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M5 8l6 6M4 14l6-6 2 2M2 5h12v2H2zM20 2l2 5-2 5M17 7h5" />
+                        </svg>
+                    </div>
+                    <h3>Languages</h3>
+                    <div class="add-tags">
+                        <span>English</span>
+                        <span>Hindi</span>
+                        <span>Bengali</span>
+                    </div>
+                </div>
+                <div class="add-card glass-card reveal">
+                    <div class="add-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path
+                                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                            <circle cx="12" cy="13" r="4" />
+                        </svg>
+                    </div>
+                    <h3>Interests</h3>
+                    <div class="add-tags">
+                        <span>Landscape Photography</span>
+                        <span>Rail Photography</span>
+                        <span>Long-distance Cycling</span>
+                        <span>Trekking</span>
+                        <span>Cooking</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">08 — Contact</span>
+                <h2 class="section-title">Let's <span class="text-gradient">Connect</span></h2>
+                <p class="section-subtitle" id="contactSubtitle">Open to research collaborations, internship
+                    opportunities, and GIS consulting projects.</p>
+            </div>
+            <div class="contact-grid">
+                <a href="mailto:ankushchakraborty1125@gmail.com" class="contact-card glass-card reveal"
+                    id="contactEmail">
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                    <h3>Email</h3>
+                    <p>ankushchakraborty1125@gmail.com</p>
+                </a>
+
+                <!-- Phone: gated behind form -->
+                <div class="contact-card glass-card reveal" id="contactPhone" onclick="openPhoneModal()">
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path
+                            d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
+                    <h3>Phone</h3>
+                    <p class="phone-gated-text">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        Click to reveal my number
+                    </p>
+                </div>
+
+                <a href="https://linkedin.com/in/ankush-chakraborty-7b9118321" target="_blank" rel="noopener noreferrer"
+                    class="contact-card glass-card reveal" id="contactLinkedin">
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                        <rect x="2" y="9" width="4" height="12" />
+                        <circle cx="4" cy="4" r="2" />
+                    </svg>
+                    <h3>LinkedIn</h3>
+                    <p>ankush-chakraborty</p>
+                </a>
+
+                <div class="contact-card glass-card reveal" id="contactLocation">
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
+                    <h3>Location</h3>
+                    <p>Pune, Maharashtra</p>
+                    <p class="contact-sub">From Kolkata, West Bengal</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Welcome Modal (Visitor Type Selector) -->
+    <div class="modal-overlay" id="welcomeModal">
+        <div class="modal glass-card" style="max-width: 500px; text-align: center;">
+            <div class="modal-icon" style="margin: 0 auto 20px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="url(#modalGrad)" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <h3 class="modal-title">Welcome to Ankush's Portfolio</h3>
+            <p class="modal-subtitle">To provide the most relevant experience, please tell me what brings you here
+                today:</p>
+
+            <div class="visitor-options">
+                <button class="visitor-btn" onclick="setVisitorType('HR / Recruiter')">
+                    <span style="font-size: 1.2rem;">👩‍💼</span> HR / Recruiter
+                </button>
+                <button class="visitor-btn" onclick="setVisitorType('Working Professional')">
+                    <span style="font-size: 1.2rem;">👨‍💻</span> Working Professional
+                </button>
+                <button class="visitor-btn" onclick="setVisitorType('Student')">
+                    <span style="font-size: 1.2rem;">🎓</span> Student
+                </button>
+                <button class="visitor-btn" onclick="setVisitorType('Researcher')">
+                    <span style="font-size: 1.2rem;">🔬</span> Researcher
+                </button>
+                <button class="visitor-btn" onclick="setVisitorType('Other')">
+                    <span style="font-size: 1.2rem;">🌍</span> Other
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Phone Reveal Modal -->
+    <div class="modal-overlay" id="phoneModal">
+        <div class="modal glass-card">
+            <button class="modal-close" id="modalClose" onclick="closePhoneModal()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="url(#modalGrad)" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    <defs>
+                        <linearGradient id="modalGrad" x1="0" y1="0" x2="24" y2="24">
+                            <stop offset="0%" stop-color="#00d4ff" />
+                            <stop offset="100%" stop-color="#7c3aed" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h3 class="modal-title">Reveal My Phone Number</h3>
+            <p class="modal-subtitle">Please share your details to view my contact number.</p>
+
+            <form id="phoneRevealForm" onsubmit="revealPhone(event)">
+                <div class="form-group">
+                    <label for="visitorName">Your Name</label>
+                    <input type="text" id="visitorName" placeholder="Enter your full name" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <label for="visitorPhone">Your Phone Number</label>
+                    <input type="tel" id="visitorPhone" placeholder="e.g. +91 9876543210" required autocomplete="tel">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 5-5 5 5 0 0 1 5 5v4" />
+                    </svg>
+                    Unlock Number
+                </button>
+            </form>
+
+            <div class="phone-revealed" id="phoneRevealed" style="display:none;">
+                <div class="revealed-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                </div>
+                <p class="revealed-label">Here's my number:</p>
+                <a href="tel:+917980581823" class="revealed-number">+91 7980581823</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-name">Ankush Chakraborty</span>
+                    <span class="footer-tagline">GIS & Spatial Intelligence</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#about">About</a>
+                    <a href="#experience">Experience</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <p class="footer-copy">&copy; 2026 Ankush Chakraborty. All rights reserved.</p>
+                <div style="margin-top: 16px;">
+                    <a href="dashboard.html"
+                        style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.6; text-decoration: none; transition: var(--transition);"
+                        onmouseover="this.style.opacity='1'; this.style.color='var(--accent-1)'"
+                        onmouseout="this.style.opacity='0.6'; this.style.color='var(--text-muted)'">Admin Access</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
