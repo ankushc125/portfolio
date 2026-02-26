@@ -233,17 +233,7 @@ function personalizeGreeting(type) {
         // Prioritize LinkedIn
         if(cLink) cLink.style.order = "-2";
 
-    } else if (type === 'Student') {
-        subtitle.innerHTML = 'Transforming geospatial data into actionable intelligence. <br><span style="color:var(--accent-1); font-weight:600;">Welcome! Feel free to explore my projects to get inspired.</span>';
-        if (primaryCTA) {
-            primaryCTA.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> View My Projects`;
-            primaryCTA.href = "#projects";
-        }
-        if (contactSubtitle) contactSubtitle.textContent = "Feel free to reach out via Email if you have questions about my projects or GIS studies.";
-        // Push phone to bottom to avoid spam
-        if(cPhone) cPhone.style.order = "5"; 
-        
-    } else if (type === 'Researcher') {
+    }  else if (type === 'Researcher') {
         subtitle.innerHTML = 'Transforming geospatial data into actionable intelligence. <br><span style="color:var(--accent-1); font-weight:600;">Committed to pushing the boundaries of spatial analysis and modeling.</span>';
         if (primaryCTA) {
             primaryCTA.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Explore Projects`;
