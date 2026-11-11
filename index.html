@@ -50,7 +50,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="manifest" href="site.webmanifest">
 
-    <!-- ═══ STRUCTURED DATA — Person + WebSite + BreadcrumbList ═══ -->
+    <!-- ═══ STRUCTURED DATA — Person + ProfilePage + ProfessionalService + WebSite + BreadcrumbList ═══ -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -59,9 +59,11 @@
           "@type": "Person",
           "@id": "https://ankushatlas.vercel.app/#person",
           "name": "Ankush Chakraborty",
+          "alternateName": ["Ankush Chakraborty GIS", "Ankush Chakraborty Geoinformatics"],
           "jobTitle": "GIS Analyst, Cartographer, Freelancer & Geography and Geospatial Science Teacher",
           "description": "Geospatial Data Analyst with an M.Sc. in Geoinformatics from Savitribai Phule Pune University. Experienced in GIS, remote sensing, spatial analysis, cartography, and geospatial data processing.",
           "url": "https://ankushatlas.vercel.app/",
+          "mainEntityOfPage": "https://ankushatlas.vercel.app/",
           "image": "https://ankushatlas.vercel.app/ankush.png",
           "email": "ankushchakraborty1125@gmail.com",
           "telephone": "+917980581823",
@@ -83,18 +85,51 @@
               "address": { "@type": "PostalAddress", "addressLocality": "Kolkata", "addressCountry": "IN" }
             }
           ],
-          "knowsAbout": ["GIS", "Remote Sensing", "ArcGIS Pro", "QGIS", "Google Earth Engine", "Spatial Analysis", "Cartography", "Python", "ERDAS IMAGINE", "UAV Survey"],
+          "knowsAbout": ["GIS", "Geoinformatics", "Remote Sensing", "ArcGIS Pro", "QGIS", "Google Earth Engine", "Spatial Analysis", "Cartography", "Python", "ERDAS IMAGINE", "UAV Survey"],
           "sameAs": [
-            "https://linkedin.com/in/ankush-chakraborty-7b9118321"
+            "https://linkedin.com/in/ankush-chakraborty-7b9118321",
+            "https://github.com/ankushc125"
           ]
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "https://ankushatlas.vercel.app/#profilepage",
+          "url": "https://ankushatlas.vercel.app/",
+          "name": "Ankush Chakraborty — Official Portfolio",
+          "mainEntity": { "@id": "https://ankushatlas.vercel.app/#person" },
+          "dateModified": "2026-11-11",
+          "inLanguage": "en-IN"
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://ankushatlas.vercel.app/#service",
+          "name": "Ankush Chakraborty — GIS, Cartography & Geospatial Services",
+          "url": "https://ankushatlas.vercel.app/",
+          "image": "https://ankushatlas.vercel.app/og-image.png",
+          "telephone": "+917980581823",
+          "email": "ankushchakraborty1125@gmail.com",
+          "founder": { "@id": "https://ankushatlas.vercel.app/#person" },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Kolkata",
+            "addressRegion": "West Bengal",
+            "addressCountry": "IN"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 22.5726,
+            "longitude": 88.3639
+          },
+          "areaServed": ["Kolkata", "Pune", "India"],
+          "priceRange": "$$"
         },
         {
           "@type": "WebSite",
           "@id": "https://ankushatlas.vercel.app/#website",
           "url": "https://ankushatlas.vercel.app/",
           "name": "Ankush Chakraborty — GIS Portfolio",
-          "description": "Portfolio of Ankush Chakraborty, GIS Analyst and Geoinformatics specialist based in Kolkata.",
-          "author": { "@id": "https://ankushatlas.vercel.app/#person" },
+          "description": "Official portfolio of Ankush Chakraborty, GIS Analyst, Cartographer, and Geoinformatics specialist based in Kolkata.",
+          "publisher": { "@id": "https://ankushatlas.vercel.app/#person" },
           "inLanguage": "en-IN"
         },
         {
