@@ -22,6 +22,7 @@
 
     function init() {
         localStorage.removeItem('ambient_music');
+        initCopyrightYear();
         initScrollReveal();
         initSectionSpy();
         initScrollChrome();
@@ -33,6 +34,37 @@
         initTypewriter();
         initResumeTracking();
     }
+
+    function initCopyrightYear() {
+        const yearEl = document.getElementById('copyrightYear');
+        if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+    }
+
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = `toast-banner ${type === 'error' ? 'toast-error' : 'toast-success'}`;
+        toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-6px)';
+            setTimeout(() => toast.remove(), 260);
+        }, 3400);
+    }
+
+    window.copyContact = (value, label) => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(value)
+                .then(() => showToast(`${label} copied to clipboard.`, 'success'))
+                .catch(() => showToast(`Could not copy ${label.toLowerCase()}. Please select and copy manually.`, 'error'));
+        } else {
+            showToast(`Clipboard unavailable. ${label}: ${value}`, 'error');
+        }
+    };
 
     // Experience interactive tab switching
     function initExperienceTabs() {
@@ -128,35 +160,71 @@
     }
 
     function initMobileNav() {
-        if (!els.navToggle) return;
+        if (!els.navToggle || !els.navLinks) return;
+
+        function closeNav() {
+            els.navLinks.classList.remove('open');
+            els.navToggle.classList.remove('is-active');
+            els.navToggle.setAttribute('aria-expanded', 'false');
+        }
+
         els.navToggle.addEventListener('click', () => {
             const isOpen = els.navLinks.classList.toggle('open');
+            els.navToggle.classList.toggle('is-active', isOpen);
             els.navToggle.setAttribute('aria-expanded', String(isOpen));
         });
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                els.navLinks.classList.remove('open');
-                els.navToggle.setAttribute('aria-expanded', 'false');
-            });
+
+        document.querySelectorAll('.nav-link, .nav-resume').forEach(link => {
+            link.addEventListener('click', closeNav);
         });
-    }    // Expose functions globally to prevent ReferenceErrors from inline onclick handlers
-    window.openPhoneModal = () => openRevealModal('phone');
-    window.revealEmail = (event) => {
-        const emailText = document.getElementById('emailText');
-        const email = 'ankushchakraborty1125@gmail.com';
-        if (emailText.textContent.includes('reveal') || emailText.textContent.includes('🔒')) {
-            emailText.textContent = email;
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && els.navLinks.classList.contains('open')) {
+                closeNav();
             }
+        });
+    }
+
+    const PHONE_DISPLAY = '+91 79805 81823';
+    const PHONE_TEL = '+917980581823';
+    const EMAIL_ADDRESS = 'ankushchakraborty1125@gmail.com';
+
+    function revealUnlockedPhone() {
+        const phoneText = document.getElementById('phoneText');
+        const phoneActions = document.getElementById('phoneActions');
+        const phoneCard = document.getElementById('contactPhone');
+
+        if (phoneText) {
+            phoneText.innerHTML = `<a href="tel:${PHONE_TEL}" class="contact-card-link" id="phoneLink">${PHONE_DISPLAY}</a>`;
+        }
+        if (phoneActions) {
+            phoneActions.innerHTML = `
+                <a href="tel:${PHONE_TEL}" class="contact-action-btn" onclick="event.stopPropagation()">Call Now →</a>
+                <a href="https://wa.me/917980581823" target="_blank" rel="noopener noreferrer" class="contact-action-btn" onclick="event.stopPropagation()">WhatsApp</a>
+                <button type="button" class="contact-action-btn" onclick="event.stopPropagation(); copyContact('${PHONE_TEL}', 'Phone number')">Copy</button>
+            `;
+        }
+        if (phoneCard) {
+            phoneCard.setAttribute('aria-label', `Call Ankush Chakraborty at ${PHONE_DISPLAY}`);
+        }
+    }
+
+    // Expose functions globally for inline handlers
+    window.handlePhoneCardClick = (event) => {
+        if (event && event.target && event.target.closest('a, button')) {
+            return;
+        }
+        if (localStorage.getItem('phoneRevealed') === 'true') {
+            window.location.href = `tel:${PHONE_TEL}`;
         } else {
-            window.location.href = 'mailto:' + email;
+            openRevealModal('phone');
         }
     };
+    window.openPhoneModal = () => openRevealModal('phone');
+    window.revealEmail = () => {
+        window.location.href = 'mailto:' + EMAIL_ADDRESS;
+    };
     window.closeContactModal = closeRevealModal;
-
-    const EMAIL_ADDRESS = 'ankushchakraborty1125@gmail.com';
 
     function openRevealModal(type) {
         const modal = document.getElementById('contactModal');
@@ -165,40 +233,36 @@
         const subtitle = document.getElementById('contactModalSubtitle');
         const emailGroup = document.getElementById('mvEmailGroup');
         const phoneGroup = document.getElementById('mvPhoneGroup');
-        
+        const errorEl = document.getElementById('modalError');
+        const successEl = document.getElementById('modalSuccess');
+
         if (!modal) return;
-        
-        targetInput.value = type;
-        
-        if (type === 'phone') {
-            title.textContent = 'Unlock Phone Number';
-            subtitle.textContent = 'Enter your details below to reveal Ankush\'s phone number.';
-            emailGroup.style.display = 'flex';
-            const emailInput = document.getElementById('mvEmail');
-            if (emailInput) emailInput.required = true;
-            if (phoneGroup) phoneGroup.style.display = 'none';
-            const phoneInput = document.getElementById('mvPhone');
-            if (phoneInput) phoneInput.required = false;
-        } else {
-            title.textContent = 'Unlock Email Address';
-            subtitle.textContent = 'Enter your details below to reveal Ankush\'s email address.';
-            if (emailGroup) emailGroup.style.display = 'none';
-            const emailInput = document.getElementById('mvEmail');
-            if (emailInput) emailInput.required = false;
-            if (phoneGroup) phoneGroup.style.display = 'flex';
-            const phoneInput = document.getElementById('mvPhone');
-            if (phoneInput) phoneInput.required = true;
-        }
-        
+
+        if (errorEl) { errorEl.className = 'modal-status-msg'; errorEl.textContent = ''; }
+        if (successEl) { successEl.className = 'modal-status-msg'; successEl.innerHTML = ''; }
+
+        if (targetInput) targetInput.value = type || 'phone';
+
+        if (title) title.textContent = 'Verify Your Details to View Number';
+        if (subtitle) subtitle.textContent = 'Enter your details below to save your inquiry and reveal Ankush\'s clickable phone number.';
+        if (emailGroup) emailGroup.style.display = 'flex';
+        const emailInput = document.getElementById('mvEmail');
+        if (emailInput) emailInput.required = true;
+        if (phoneGroup) phoneGroup.style.display = 'flex';
+        const phoneInput = document.getElementById('mvPhone');
+        if (phoneInput) phoneInput.required = true;
+
         modal.classList.add('active');
+        setTimeout(() => {
+            const nameInput = document.getElementById('mvName');
+            if (nameInput) nameInput.focus();
+        }, 120);
     }
 
     function closeRevealModal() {
         const modal = document.getElementById('contactModal');
         if (modal) modal.classList.remove('active');
     }
-
-
 
     function initContactModal() {
         const form = document.getElementById('contactModalForm');
@@ -213,67 +277,57 @@
                 if (e.target === modal) closeRevealModal();
             });
         }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+                closeRevealModal();
+            }
+        });
 
-        // Auto-reveal on load if already unlocked in localStorage
+        // Restore unlocked clickable phone number on page load if previously verified
         if (localStorage.getItem('phoneRevealed') === 'true') {
-            const phoneText = document.getElementById('phoneText');
-            if (phoneText) {
-                phoneText.innerHTML = `<a href="tel:${PHONE_NUMBER}" class="contact-revealed-link">${PHONE_NUMBER}</a>`;
-            }
-            const phoneCard = document.getElementById('contactPhone');
-            if (phoneCard) {
-                phoneCard.onclick = () => window.location.href = `tel:${PHONE_NUMBER}`;
-                phoneCard.onkeydown = (ev) => { if (ev.key === 'Enter') window.location.href = `tel:${PHONE_NUMBER}`; };
-            }
-        }
-        if (localStorage.getItem('emailRevealed') === 'true') {
-            const emailText = document.getElementById('emailText');
-            if (emailText) {
-                emailText.innerHTML = `<a href="mailto:${EMAIL_ADDRESS}" class="contact-revealed-link">${EMAIL_ADDRESS}</a>`;
-            }
-            const emailCard = document.getElementById('emailCard');
-            if (emailCard) {
-                emailCard.onclick = () => window.location.href = `mailto:${EMAIL_ADDRESS}`;
-                emailCard.onkeydown = (ev) => { if (ev.key === 'Enter') window.location.href = `mailto:${EMAIL_ADDRESS}`; };
-            }
+            revealUnlockedPhone();
         }
 
-    function isValidPhone(phone) {
-        const clean = phone.replace(/[\s\-\(\)\+]/g, '');
-        const indianRegex = /^(?:91)?[6789]\d{9}$/;
-        const globalRegex = /^[1-9]\d{6,14}$/;
-        return indianRegex.test(clean) || globalRegex.test(clean);
-    }
-
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    if (!form) return;
-    
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const type = document.getElementById('revealTargetType').value;
-        const name = document.getElementById('mvName').value.trim();
-        const purpose = document.getElementById('mvPurpose').value.trim();
-        const errorEl = document.getElementById('modalError');
-
-        if (errorEl) {
-            errorEl.style.display = 'none';
-            errorEl.textContent = '';
+        function isValidPhone(phone) {
+            const clean = phone.replace(/[\s\-\(\)\+]/g, '');
+            const indianRegex = /^(?:91)?[6789]\d{9}$/;
+            const globalRegex = /^[1-9]\d{6,14}$/;
+            return indianRegex.test(clean) || globalRegex.test(clean);
         }
 
-        function showError(msg) {
-            if (errorEl) {
-                errorEl.textContent = msg;
-                errorEl.style.display = 'block';
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        if (!form) return;
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = (document.getElementById('mvName')?.value || '').trim();
+            const email = (document.getElementById('mvEmail')?.value || '').trim();
+            const phone = (document.getElementById('mvPhone')?.value || '').trim();
+            const purpose = (document.getElementById('mvPurpose')?.value || '').trim();
+            const errorEl = document.getElementById('modalError');
+            const successEl = document.getElementById('modalSuccess');
+            const submitBtn = document.getElementById('modalSubmitBtn');
+
+            if (errorEl) { errorEl.className = 'modal-status-msg'; errorEl.textContent = ''; }
+            if (successEl) { successEl.className = 'modal-status-msg'; successEl.innerHTML = ''; }
+
+            function showError(msg) {
+                if (errorEl) {
+                    errorEl.textContent = msg;
+                    errorEl.className = 'modal-status-msg is-error';
+                }
+                showToast(msg, 'error');
             }
-        }
 
-        if (type === 'phone') {
-            const email = document.getElementById('mvEmail').value.trim();
+            if (!name || name.length < 2) {
+                showError('Please enter your full name.');
+                return;
+            }
             if (!email) {
                 showError('Email address is required.');
                 return;
@@ -282,105 +336,139 @@
                 showError('Please enter a valid email address.');
                 return;
             }
-        } else {
-            const phone = document.getElementById('mvPhone').value.trim();
             if (!phone) {
-                showError('Phone number is required.');
+                showError('Your phone number is required.');
                 return;
             }
             if (!isValidPhone(phone)) {
-                showError('Please enter a valid phone number (e.g. +91 9876543210).');
+                showError('Please enter a valid phone number.');
                 return;
             }
-        }
-        
-        // Determine visitor type
-        let visitorType = 'Other';
-        const purpLower = purpose.toLowerCase();
-        if (purpLower.includes('recruit') || purpLower.includes('job') || purpLower.includes('hire') || purpLower.includes('hr')) {
-            visitorType = 'Recruiter';
-        } else if (purpLower.includes('research') || purpLower.includes('paper') || purpLower.includes('collaboration') || purpLower.includes('academic') || purpLower.includes('university') || purpLower.includes('professor') || purpLower.includes('sppu')) {
-            visitorType = 'Researcher';
-        } else if (purpLower.includes('project') || purpLower.includes('freelance') || purpLower.includes('consult')) {
-            visitorType = 'Client';
-        }
-        
-        // Set localStorage for Admin Dashboard
-        localStorage.setItem('visitorName', name);
-        localStorage.setItem('visitorLocation', 'Local');
-        localStorage.setItem('visitorDevice', window.innerWidth < 768 ? 'Mobile' : 'Desktop');
-        localStorage.setItem('visitorType', visitorType);
-        localStorage.setItem('siteVisited', 'true');
-        localStorage.setItem('visitTimestamp', new Date().toLocaleString());
+            if (!purpose || purpose.length < 2) {
+                showError('Please enter your organization or purpose.');
+                return;
+            }
 
-            
-            if (type === 'phone') {
-                const email = document.getElementById('mvEmail').value;
-                localStorage.setItem('visitorEmail', email);
-                localStorage.setItem('phoneRevealed', 'true');
-                
-                // Increment phone unlocks statistic count for dashboard charts
-                let unlocksCount = parseInt(localStorage.getItem('phoneUnlocksCount') || '0');
-                localStorage.setItem('phoneUnlocksCount', String(unlocksCount + 1));
-                
-                // Track with Firebase Telemetry
-                if (window.telemetry) {
-                    window.telemetry.logPhoneUnlock(name, email, visitorType);
-                }
+            let visitorType = 'Other';
+            const purpLower = purpose.toLowerCase();
+            if (purpLower.includes('recruit') || purpLower.includes('job') || purpLower.includes('hire') || purpLower.includes('hr')) {
+                visitorType = 'Recruiter';
+            } else if (purpLower.includes('research') || purpLower.includes('paper') || purpLower.includes('collaboration') || purpLower.includes('academic') || purpLower.includes('university') || purpLower.includes('professor') || purpLower.includes('sppu')) {
+                visitorType = 'Researcher';
+            } else if (purpLower.includes('project') || purpLower.includes('freelance') || purpLower.includes('consult')) {
+                visitorType = 'Client';
+            }
 
-                // Reveal Ankush's phone
-                const phoneText = document.getElementById('phoneText');
-                if (phoneText) {
-                    phoneText.innerHTML = `<a href="tel:${PHONE_NUMBER}" class="contact-revealed-link">${PHONE_NUMBER}</a>`;
-                }
-                
-                // Change the card behavior so next click directly calls tel:
-                const phoneCard = document.getElementById('contactPhone');
-                if (phoneCard) {
-                    phoneCard.onclick = () => window.location.href = `tel:${PHONE_NUMBER}`;
-                    phoneCard.onkeydown = (ev) => { if (ev.key === 'Enter') window.location.href = `tel:${PHONE_NUMBER}`; };
-                }
-            } else {
-                const phone = document.getElementById('mvPhone').value;
-                localStorage.setItem('visitorPhone', phone);
-                localStorage.setItem('emailRevealed', 'true');
-                
-                // Track with Firebase Telemetry
-                if (window.telemetry) {
-                    window.telemetry.logPhoneUnlock(name, phone, visitorType);
-                }
+            const deviceType = window.innerWidth < 768 ? 'Mobile' : 'Desktop';
+            const timestamp = Date.now();
+            const originalBtnText = submitBtn ? submitBtn.textContent : 'Save & Show Phone Number';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+            }
 
-                // Reveal Ankush's email
-                const emailText = document.getElementById('emailText');
-                if (emailText) {
-                    emailText.innerHTML = `<a href="mailto:${EMAIL_ADDRESS}" class="contact-revealed-link">${EMAIL_ADDRESS}</a>`;
-                }
-                
-                // Change the card behavior so next click directly opens email
-                const emailCard = document.getElementById('emailCard');
-                if (emailCard) {
-                    emailCard.onclick = () => window.location.href = `mailto:${EMAIL_ADDRESS}`;
-                    emailCard.onkeydown = (ev) => { if (ev.key === 'Enter') window.location.href = `mailto:${EMAIL_ADDRESS}`; };
+            // Persist searching person's information locally for Admin Dashboard
+            localStorage.setItem('visitorName', name);
+            localStorage.setItem('visitorEmail', email);
+            localStorage.setItem('visitorPhone', phone);
+            localStorage.setItem('visitorPurpose', purpose);
+            localStorage.setItem('visitorLocation', 'Web Visitor');
+            localStorage.setItem('visitorDevice', deviceType);
+            localStorage.setItem('visitorType', visitorType);
+            localStorage.setItem('siteVisited', 'true');
+            localStorage.setItem('visitTimestamp', new Date(timestamp).toLocaleString());
+            localStorage.setItem('phoneRevealed', 'true');
+
+            const unlocksCount = parseInt(localStorage.getItem('phoneUnlocksCount') || '0', 10);
+            localStorage.setItem('phoneUnlocksCount', String(unlocksCount + 1));
+
+            try {
+                const leads = JSON.parse(localStorage.getItem('capturedLeads') || '[]');
+                leads.unshift({
+                    id: 'lead_' + timestamp,
+                    timestamp,
+                    visitorName: name,
+                    visitorEmail: email,
+                    visitorPhone: phone,
+                    visitorPurpose: purpose,
+                    visitorType,
+                    visitorLocation: 'Web Visitor',
+                    device: deviceType,
+                    os: navigator.platform || 'Web',
+                    phoneRevealed: true,
+                    resumeDownloaded: localStorage.getItem('resumeDownloaded') === 'true'
+                });
+                localStorage.setItem('capturedLeads', JSON.stringify(leads.slice(0, 50)));
+            } catch (_) {
+                // Ignore storage quota errors
+            }
+
+            // Send searching person's details straight to Ankush's email via FormSubmit (no API key required)
+            let emailSent = false;
+            try {
+                const res = await fetch(`https://formsubmit.co/ajax/${EMAIL_ADDRESS}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        _subject: `Portfolio Phone Unlock: ${name} (${visitorType})`,
+                        _template: 'table',
+                        _captcha: 'false',
+                        name,
+                        email,
+                        phone,
+                        purpose,
+                        visitorType,
+                        device: deviceType,
+                        page: window.location.href,
+                        submittedAt: new Date(timestamp).toLocaleString()
+                    })
+                });
+                emailSent = res.ok;
+            } catch (_) {
+                emailSent = false;
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
                 }
             }
-            
-            closeRevealModal();
+
+            // Reveal clickable tel: number on the Phone card immediately
+            revealUnlockedPhone();
+
+            if (emailSent) {
+                if (successEl) {
+                    successEl.innerHTML = `Details sent! Call Ankush directly: <a href="tel:${PHONE_TEL}" class="contact-card-link">${PHONE_DISPLAY}</a>`;
+                    successEl.className = 'modal-status-msg is-success';
+                }
+                showToast(`Details sent & number unlocked: ${PHONE_DISPLAY}`, 'success');
+            } else {
+                if (successEl) {
+                    successEl.innerHTML = `Number unlocked: <a href="tel:${PHONE_TEL}" class="contact-card-link">${PHONE_DISPLAY}</a> (offline/network blocked email alert).`;
+                    successEl.className = 'modal-status-msg is-success';
+                }
+                showToast(`Number unlocked: ${PHONE_DISPLAY}`, 'success');
+            }
             form.reset();
         });
     }
 
     function initResumeTracking() {
-        const resumeLink = document.querySelector('.nav-resume');
-        if (resumeLink) {
+        const resumeLinks = document.querySelectorAll('.nav-resume, a[href$="Ankush_Chakraborty_Resume.pdf"]');
+        resumeLinks.forEach(resumeLink => {
             resumeLink.addEventListener('click', () => {
                 localStorage.setItem('resumeDownloaded', 'true');
-                let count = parseInt(localStorage.getItem('resumeDownloadCount') || '0');
+                const count = parseInt(localStorage.getItem('resumeDownloadCount') || '0', 10);
                 localStorage.setItem('resumeDownloadCount', String(count + 1));
                 if (window.telemetry) {
                     window.telemetry.logResumeDownload();
                 }
+                showToast('Downloading Ankush Chakraborty Resume (PDF)...', 'success');
             });
-        }
+        });
     }
 
     // Contact form opens a pre-filled email instead of faking a "sent" state
@@ -416,7 +504,7 @@
 
         if (!titleEl) return;
 
-        // 0.8s: Portrait Container Scales In, Blurs Out, and Fades In (Music starts in sync if allowed)
+        // 0.15s: Portrait Container Scales In, Blurs Out, and Fades In
         setTimeout(() => {
             if (photoContainer) {
                 photoContainer.style.opacity = '1';
@@ -424,16 +512,16 @@
                 photoContainer.style.transform = 'scale(1)';
             }
             startAmbientMusic();
-        }, 800);
+        }, 150);
 
-        // 2.0s: Name Animates In (Staggered Editorial Slide-Up)
+        // 0.35s: Name Animates In (Staggered Editorial Slide-Up)
         setTimeout(() => {
             const firstNameEl = document.querySelector('.hero-first-name');
             if (firstNameEl) {
                 firstNameEl.style.opacity = '1';
                 firstNameEl.style.transform = 'translateY(0)';
             }
-        }, 2000);
+        }, 350);
 
         setTimeout(() => {
             const lastNameEl = document.querySelector('.hero-last-name');
@@ -441,95 +529,56 @@
                 lastNameEl.style.opacity = '1';
                 lastNameEl.style.transform = 'translateY(0)';
             }
-        }, 2300);
+        }, 500);
 
-        // 2.8s: Professional headline fades in & starts cycling
+        // 0.65s: Professional headline fades in & starts cycling
         setTimeout(() => {
             if (headlineEl) {
                 headlineEl.style.opacity = '1';
-                headlineEl.textContent = 'Geospatial Data Analyst';
+                headlineEl.textContent = 'GIS Analyst';
                 initHeadlineCycling();
             }
-        }, 2800);
+        }, 650);
 
-        // 3.8s: Coordinates searching animation
+        // 0.85s: Coordinates display fades in cleanly
         setTimeout(() => {
             if (coordsEl) {
                 coordsEl.style.opacity = '1';
-                coordsEl.innerHTML = `<span style="color: var(--blue); display: inline-flex; align-items: center; gap: 8px;">
-                    <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: ringRotate 2s linear infinite;"><circle cx="12" cy="12" r="10"></circle><path d="M12 2v4"></path></svg>
-                    🛰️ Searching Coordinates...
-                </span>`;
-                
-                setTimeout(() => {
-                    coordsEl.innerHTML = `<span style="color: var(--gold); display: inline-flex; align-items: center; gap: 8px;">
-                        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: ringRotate 1s linear infinite;"><circle cx="12" cy="12" r="10"></circle><path d="M12 2v4"></path></svg>
-                        📡 Acquiring Signal...
-                    </span>`;
-                }, 800);
-
-                setTimeout(() => {
-                    coordsEl.innerHTML = `<span style="color: var(--green); display: inline-flex; align-items: center; gap: 8px;">
-                        <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        🗺️ Location Locked
-                    </span>`;
-                }, 1600);
-
-                setTimeout(() => {
-                    coordsEl.innerHTML = `
-                        <span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="detail-icon">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            Kolkata, West Bengal
-                        </span>
-                        <span class="meta-sep">|</span>
-                        <span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="detail-icon">
-                                <circle cx="12" cy="12" r="10" />
-                                <circle cx="12" cy="12" r="6" />
-                                <circle cx="12" cy="12" r="2" />
-                            </svg>
-                            22.5726° N, 88.3639° E
-                        </span>
-                    `;
-                }, 2400);
             }
-        }, 3800);
+        }, 850);
 
-        // 4.4s: CTA buttons slide upward
+        // 0.95s: CTA buttons slide upward
         setTimeout(() => {
             if (buttonsEl) {
-                buttonsEl.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                buttonsEl.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
                 buttonsEl.style.opacity = '1';
                 buttonsEl.style.transform = 'translateY(0)';
             }
-        }, 4400);
+        }, 950);
 
-        // 4.8s: Social left rail fades in
+        // 1.1s: Social left rail fades in
         setTimeout(() => {
             if (railDots) {
-                railDots.style.transition = 'opacity 0.8s ease';
+                railDots.style.transition = 'opacity 0.6s ease';
                 railDots.style.opacity = '1';
             }
-        }, 4800);
+        }, 1100);
 
-        // 5.2s: Scroll indicator begins subtle animation
+        // 1.25s: Scroll indicator begins subtle animation
         setTimeout(() => {
             if (scrollIndicator) {
-                scrollIndicator.style.transition = 'opacity 0.8s ease';
+                scrollIndicator.style.transition = 'opacity 0.6s ease';
                 scrollIndicator.style.opacity = '0.6';
             }
-        }, 5200);
+        }, 1250);
 
-        // 3.0s: Show AI Greeting card (shows every new session, dismissible per session)
+        // 2.0s: Show Assistant Greeting card (shows every new session, dismissible per session)
         setTimeout(() => {
             if (!aiGreeting) return;
             if (!sessionStorage.getItem('ai_greeting_dismissed')) {
                 aiGreeting.classList.add('visible');
             }
-        }, 3000);
+        }, 2000);
 
         // Auto-dismiss greeting when user starts scrolling
         let greetingScrolled = false;
@@ -566,12 +615,12 @@
         if (!headlineEl) return;
 
         const headlines = [
-            "Geospatial Data Analyst",
-            "GIS Professional",
+            "GIS Analyst",
+            "Geoinformatics Specialist",
             "Remote Sensing Specialist",
-            "Spatial Intelligence Explorer",
-            "Cartographer",
-            "Earth Observation Enthusiast"
+            "Spatial Analysis & Cartographer",
+            "Freelancer",
+            "Geography & Geospatial Science Teacher"
         ];
 
         let index = 0;
@@ -632,6 +681,7 @@ function updateMusicUI(isPlaying) {
     const fOn  = floatBtn && floatBtn.querySelector('.music-icon-on');
     if (floatBtn) {
         floatBtn.classList.toggle('is-playing', isPlaying);
+        floatBtn.setAttribute('aria-pressed', String(isPlaying));
         if (fOff) fOff.style.display = isPlaying ? 'none' : 'flex';
         if (fOn)  fOn.style.display  = isPlaying ? 'flex' : 'none';
     }

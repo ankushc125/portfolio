@@ -11,8 +11,12 @@ const firebaseConfig = {
     appId: "YOUR_APP_ID"
 };
 
-// Initialize Firebase
-if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+const isFirebaseConfigured = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
+
+// Initialize Firebase only when real project credentials are configured
+if (isFirebaseConfigured && typeof firebase !== 'undefined' && !firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-const db = typeof firebase !== 'undefined' ? firebase.database() : null;
+const db = (isFirebaseConfigured && typeof firebase !== 'undefined' && firebase.apps.length)
+    ? firebase.database()
+    : null;

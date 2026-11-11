@@ -1,0 +1,60 @@
+# Ankush Chakraborty — GIS Portfolio
+
+## Who is this?
+
+Ankush Chakraborty is a GIS Analyst, Geoinformatics Specialist, Remote Sensing Analyst, Cartographer, Freelancer, and Geography & Geospatial Science Teacher based in Kolkata, West Bengal, India.
+He holds an M.Sc. in Geoinformatics (2026) from Savitribai Phule Pune University (SPPU), Pune, and a B.Sc. in Geography (Hons.) (2024) from the University of Calcutta.
+
+## Professional Summary
+
+Geospatial Data Analyst with an M.Sc. in Geoinformatics and hands-on experience in GIS, remote sensing, spatial analysis, cartography, and geospatial data processing. Proficient in ArcGIS Pro, QGIS, ERDAS IMAGINE, and Google Earth Engine. Experienced in satellite image processing, land use/land cover mapping, change detection, DEM analysis, digitization, georeferencing, spatial modeling, and thematic map production.
+
+## Experience
+
+- **Campus Ambassador** — YouthYatra, Savitribai Phule Pune University (SPPU), Pune (Jun 2026 – Present)
+- **GIS Cartographer (Freelance)** — Maritime Security Research Project (May 2026): Designed 5 publication-quality thematic maps on India's maritime security and the Indian Ocean Region (coastal radar networks, deployments, SLOCs).
+- **GIS Intern** — Vasundharaa Geo Technologies Pvt. Ltd., Pune (Jan 2025 – Apr 2025): Forest fire classification and frequency analysis, ML training dataset preparation and validation, spatial analysis, web-based GIS digitization, raster-vector conversion.
+
+## Key Projects & Publications
+
+1. **Forecasting the Future of India's Agricultural Land: Spatio-Temporal Trends, Potential Threats and Implications for Food Security** — Book Chapter, de Royal Publishers (2026).
+2. **Developing a Climate-Adjusted Women's Empowerment Index for SpatioTemporal Analysis Across Maharashtra Districts, India** — M.Sc. Dissertation.
+3. **GIS-Based Assessment of Transportation Network Impacts on Air Quality, Climate Vulnerability & Health in Kolkata**.
+4. **Spatio-Temporal Change Detection — Mukutmanipur Region (2014–2024)**.
+
+## Education
+
+- **M.Sc. Geoinformatics** — Savitribai Phule Pune University (2026)
+- **B.Sc. Geography (Hons.)** — University of Calcutta (2024)
+- **Class XII** — West Bengal Council of Higher Secondary Education (2021)
+- **Class X** — Ramakrishna Vivekananda Mission (2019)
+
+## Technical & Soft Skills
+
+- **GIS & Remote Sensing**: ArcGIS Pro, QGIS, ERDAS IMAGINE, Google Earth Engine (Basic), Google Earth Pro
+- **Survey & Data Acquisition**: GPS, DGPS, Total Station, UAV, Mission Planner
+- **Programming & Database**: Python (Basic), SQL (Basic)
+- **Data Visualization & Productivity**: Power BI, Tableau, Microsoft Office, GeoSetter, GeoServer
+- **Soft Skills**: Teamwork, Problem Solving, Time Management, Adaptability, Communication
+- **Languages**: English, Hindi, Bengali
+
+## Certifications & Conference
+
+- Satellite Data Analysis for Weather & Climate — IITM Pune / CSEE (Mar 2026)
+- Generative AI Mastermind — Outskill (2026)
+- Advanced Geospatial Technology & Its Application Research — IIARI (Jul 2024)
+- QGIS and Its Applications — IIARI (May 2024)
+- IT Certification — Ramakrishna Vivekananda Mission (2018)
+- **Conference**: GTSL-2026 — Department of Geography (Geoinformatics), Savitribai Phule Pune University (Feb 2026)
+
+## Interests
+
+Landscape and Railway Photography, Cycling, Trekking, Cooking
+
+## Contact
+
+- **Location**: Kolkata, West Bengal, India (22.5726° N, 88.3639° E)
+- **Mobile**: +91-7980581823 (available after inquiry verification on the portfolio)
+- **Email**: ankushchakraborty1125@gmail.com
+- **LinkedIn**: https://linkedin.com/in/ankush-chakraborty-7b9118321
+- **Portfolio**: https://ankushatlas.vercel.app/

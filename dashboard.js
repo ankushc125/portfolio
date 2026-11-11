@@ -1,3 +1,12 @@
+function escapeHtml(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // SHA-256 hashing helper using Web Crypto API
 async function sha256(message) {
     const msgBuffer = new TextEncoder().encode(message);
@@ -6,7 +15,17 @@ async function sha256(message) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+function showDashboardNotice(message, type = 'success') {
+    const el = document.getElementById('dashboardNotice');
+    if (!el) return;
+    el.textContent = message;
+    el.className = `dashboard-notice ${type === 'error' ? 'is-error' : 'is-success'}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    const yearEl = document.getElementById('copyrightYear');
+    if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
     if (sessionStorage.getItem('adminUnlocked') === 'true') {
         const overlay = document.getElementById('adminOverlay');
         if (overlay) overlay.style.display = 'none';
@@ -15,18 +34,38 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function checkAdminPin() {
-    const pin = document.getElementById('adminPin').value;
+    const pinInput = document.getElementById('adminPin');
+    const pin = pinInput ? pinInput.value : '';
+    const err = document.getElementById('adminError');
+    const ok = document.getElementById('adminSuccess');
+
+    if (err) err.style.display = 'none';
+    if (ok) ok.style.display = 'none';
+
+    if (!pin) {
+        if (err) {
+            err.textContent = 'Please enter the admin passcode.';
+            err.style.display = 'block';
+        }
+        return;
+    }
+
     const hashedPin = await sha256(pin);
-    // SHA-256 hash of "ankush@125"
     if (hashedPin === '590a0e6b19a5e1c130cfb6706c63f4d15d51f1db6e6290e21b65c854901d1a4f') {
         sessionStorage.setItem('adminUnlocked', 'true');
+        if (ok) ok.style.display = 'block';
         const overlay = document.getElementById('adminOverlay');
-        if (overlay) overlay.style.opacity = '0';
-        setTimeout(() => { if (overlay) overlay.style.display = 'none'; }, 400);
-        loadDashboardData();
+        setTimeout(() => {
+            if (overlay) overlay.style.opacity = '0';
+            setTimeout(() => { if (overlay) overlay.style.display = 'none'; }, 350);
+            loadDashboardData();
+            showDashboardNotice('Dashboard unlocked successfully.', 'success');
+        }, 300);
     } else {
-        const err = document.getElementById('adminError');
-        if (err) err.style.display = 'block';
+        if (err) {
+            err.textContent = 'Incorrect passcode. Please try again.';
+            err.style.display = 'block';
+        }
     }
 }
 
@@ -38,21 +77,22 @@ function loadDashboardData() {
     const isConfigured = typeof firebaseConfig !== 'undefined' && firebaseConfig.apiKey !== "YOUR_API_KEY";
 
     if (!isConfigured || !db) {
-        console.warn("Using Sandbox Mock Data: Firebase is not configured with real keys.");
         const tag = document.querySelector('.section-tag');
-        if (tag) tag.innerHTML = "Sandbox Mock Data (Edit firebase-config.js)";
-        loadMockDashboardData();
+        if (tag) tag.textContent = "Local Leads Mode (Email Alerts Active via FormSubmit)";
+        loadLocalLeadsData();
         return;
     }
 
     const tag = document.querySelector('.section-tag');
-    if (tag) tag.innerHTML = "Live Database Mode";
+    if (tag) tag.textContent = "Live Database Mode";
 
     // Query Firebase Realtime Database
     db.ref('visitors').on('value', (snapshot) => {
         const data = snapshot.val();
         if (!data) {
-            displayEmptyState();
+            window.activeTelemetryData = [];
+            renderCharts([]);
+            displayEmptyState("No live visitor records in Firebase yet.");
             return;
         }
 
@@ -132,6 +172,7 @@ function updateDashboardView() {
     tableBody.innerHTML = '';
 
     if (filtered.length === 0) {
+        renderCharts([]);
         displayEmptyState();
         return;
     }
@@ -139,22 +180,37 @@ function updateDashboardView() {
     filtered.forEach(item => {
         const row = document.createElement('tr');
         const timeString = item.date.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        
+        const safeName = escapeHtml(item.visitorName || 'Anonymous Visitor');
+        const safeLocation = escapeHtml(item.visitorLocation || 'Not provided');
+        const safeDevice = escapeHtml(item.device || 'Unknown');
+        const safeOs = escapeHtml(item.os || 'Unknown');
+        const safeType = escapeHtml(item.visitorType || 'Other');
+        const safePhone = escapeHtml(item.visitorPhone || '');
+        const safeTel = String(item.visitorPhone || '').replace(/[^\d+]/g, '');
+
         let statusBadge = '';
         if (item.phoneRevealed) {
             statusBadge = '<span class="status-badge">Unlocked Phone</span>';
         } else if (item.resumeDownloaded) {
             statusBadge = '<span class="status-badge" style="background:rgba(124, 58, 237, 0.1); color:var(--accent-2);">Downloaded Resume</span>';
         } else {
-            statusBadge = `<span class="status-badge" style="background:rgba(255, 255, 255, 0.05); color:var(--text-primary); border:1px solid var(--border-glass);">Logged In (${item.visitorType || 'Other'})</span>`;
+            statusBadge = `<span class="status-badge" style="background:rgba(255, 255, 255, 0.05); color:var(--text-primary); border:1px solid var(--border-glass);">Logged In (${safeType})</span>`;
         }
 
+        const visitorMeta = [item.visitorEmail, item.visitorPurpose]
+            .filter(v => v && v !== '-')
+            .map(escapeHtml)
+            .join(' &middot; ');
+
         row.innerHTML = `
-            <td><span style="color:var(--text-muted); font-size:0.8rem;">${timeString}</span></td>
-            <td><strong>${item.visitorName || 'Anonymous Visitor'}</strong></td>
-            <td>${item.visitorLocation || 'Not provided'}</td>
-            <td>${item.device || 'Unknown'} (${item.os || 'Unknown'})</td>
-            <td>${item.phoneRevealed ? `<a href="tel:${item.visitorPhone}" style="color:var(--text-primary);">${item.visitorPhone}</a>` : `<span style="color:var(--text-muted);">-</span>`}</td>
+            <td><span style="color:var(--text-muted); font-size:0.8rem;">${escapeHtml(timeString)}</span></td>
+            <td>
+                <strong>${safeName}</strong>
+                ${visitorMeta ? `<div style="color:var(--text-muted); font-size:0.75rem; margin-top:2px;">${visitorMeta}</div>` : ''}
+            </td>
+            <td>${safeLocation}</td>
+            <td>${safeDevice} (${safeOs})</td>
+            <td>${item.phoneRevealed && safePhone && safePhone !== '-' ? `<a href="tel:${safeTel}" style="color:var(--accent-1);">${safePhone}</a>` : `<span style="color:var(--text-muted);">-</span>`}</td>
             <td>${statusBadge}</td>
         `;
         tableBody.appendChild(row);
@@ -211,13 +267,13 @@ function renderCharts(data) {
         const t = d.visitorType || 'Unknown';
         typeCounts[t] = (typeCounts[t] || 0) + 1;
 
-        // Timelines
-        const dateStr = d.date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-        if (!unlocksByDate[dateStr]) unlocksByDate[dateStr] = 0;
-        if (!downloadsByDate[dateStr]) downloadsByDate[dateStr] = 0;
-        
-        if (d.phoneRevealed) unlocksByDate[dateStr]++;
-        if (d.resumeDownloaded) downloadsByDate[dateStr]++;
+        // Timelines (keyed by ISO date YYYY-MM-DD for accurate chronological sorting)
+        const isoDate = d.date.toISOString().slice(0, 10);
+        if (!unlocksByDate[isoDate]) unlocksByDate[isoDate] = 0;
+        if (!downloadsByDate[isoDate]) downloadsByDate[isoDate] = 0;
+
+        if (d.phoneRevealed) unlocksByDate[isoDate]++;
+        if (d.resumeDownloaded) downloadsByDate[isoDate]++;
     });
 
     // 1. Locations (Pie Chart)
@@ -258,12 +314,15 @@ function renderCharts(data) {
 
     // 3. Unlocks Timeline (Line Chart)
     const unlCtx = document.getElementById('unlocksChart')?.getContext('2d');
-    const sortedDates = Object.keys(unlocksByDate).sort((a, b) => new Date(a) - new Date(b));
+    const sortedDates = Object.keys(unlocksByDate).sort();
+    const dateLabels = sortedDates.length
+        ? sortedDates.map(iso => new Date(iso + 'T00:00:00').toLocaleDateString([], { month: 'short', day: 'numeric' }))
+        : ['No Data'];
     if (unlCtx) {
         window.chartsInstances.unl = new Chart(unlCtx, {
             type: 'line',
             data: {
-                labels: sortedDates.length ? sortedDates : ['No Data'],
+                labels: dateLabels,
                 datasets: [{ 
                     label: 'Unlocks', 
                     data: sortedDates.length ? sortedDates.map(d => unlocksByDate[d]) : [0], 
@@ -283,7 +342,7 @@ function renderCharts(data) {
         window.chartsInstances.dl = new Chart(dlCtx, {
             type: 'bar',
             data: {
-                labels: sortedDates.length ? sortedDates : ['No Data'],
+                labels: dateLabels,
                 datasets: [{ 
                     label: 'Downloads', 
                     data: sortedDates.length ? sortedDates.map(d => downloadsByDate[d]) : [0], 
@@ -358,7 +417,7 @@ function displayEmptyState(message = "No visitor records matched your filter cri
                         <line x1="12" y1="8" x2="12" y2="12"/>
                         <line x1="12" y1="16" x2="12.01" y2="16"/>
                     </svg>
-                    <br>${message}
+                    <br>${escapeHtml(message)}
                 </td>
             </tr>
         `;
@@ -371,81 +430,60 @@ function displayEmptyState(message = "No visitor records matched your filter cri
     document.getElementById('valVisitorType').textContent = '-';
 }
 
-// Sandbox Mode Fallback mock data generator
-function loadMockDashboardData() {
-    const mockData = [];
-    const cities = [
-        "Kolkata, West Bengal, India",
-        "Howrah, West Bengal, India",
-        "Siliguri, West Bengal, India",
-        "Durgapur, West Bengal, India",
-        "Kharagpur, West Bengal, India",
-        "North 24 Parganas, West Bengal, India",
-        "Mumbai, Maharashtra, India",
-        "Pune, Maharashtra, India",
-        "Bengaluru, Karnataka, India",
-        "Chennai, Tamil Nadu, India",
-        "Hyderabad, Telangana, India",
-        "New Delhi, Delhi, India",
-        "New York, NY, United States",
-        "London, England, United Kingdom",
-        "California, CA, United States"
-    ];
-    const browsers = ["Chrome 126", "Firefox 125", "Safari 17", "Edge 124"];
-    const OSList = ["Windows 11", "MacOS Sonoma", "iOS 17", "Android 14", "Linux"];
-    const devices = ["Desktop", "Mobile", "Tablet"];
-    const types = ["Recruiter", "Researcher", "Client", "Other"];
-    const names = ["Abhijit Sen", "Sarah Jenkins", "Rajesh Sharma", "Nigel Pearson", "Amit Ghose", "Priya Das"];
-    const now = Date.now();
-    for (let i = 0; i < 24; i++) {
-        const daysAgo = Math.floor(Math.random() * 15);
-        const timestamp = now - (daysAgo * 24 * 3600 * 1000) - (Math.random() * 12 * 3600 * 1000);
-        
-        const isUnlock = Math.random() > 0.6;
-        const isDownload = Math.random() > 0.5;
+// Load only real captured visitor/lead records from local storage (no fake/mock data)
+function loadLocalLeadsData() {
+    const realData = [];
 
-        const visitorRole = types[i % types.length];
-
-        mockData.push({
-            id: 'mock_' + i,
-            timestamp: timestamp,
-            date: new Date(timestamp),
-            visitorName: isUnlock || isDownload ? names[i % names.length] : "Anonymous Visitor",
-            visitorLocation: cities[i % cities.length],
-            device: devices[i % devices.length],
-            os: OSList[i % OSList.length],
-            browser: browsers[i % browsers.length],
-            visitorPhone: isUnlock ? "+91 9830" + Math.floor(100000 + Math.random() * 900000) : "-",
-            phoneRevealed: isUnlock,
-            resumeDownloaded: isDownload,
-            visitorType: visitorRole,
-            duration: Math.floor(Math.random() * 300) + 10
+    try {
+        const storedLeads = JSON.parse(localStorage.getItem('capturedLeads') || '[]');
+        storedLeads.forEach(lead => {
+            realData.push({
+                ...lead,
+                date: new Date(lead.timestamp || Date.now())
+            });
         });
+    } catch (_) {
+        // Ignore storage errors
     }
 
-    mockData.sort((a, b) => b.date - a.date);
-    window.activeTelemetryData = mockData;
+    realData.sort((a, b) => b.date - a.date);
+    window.activeTelemetryData = realData;
+
+    if (realData.length === 0) {
+        renderCharts([]);
+        displayEmptyState("No visitor records yet. Real inquiries and unlocks will appear here.");
+        return;
+    }
+
     updateDashboardView();
 }
 
 function clearData() {
     const isConfigured = typeof firebaseConfig !== 'undefined' && firebaseConfig.apiKey !== "YOUR_API_KEY";
 
-    if (!isConfigured) {
-        if (confirm("Reset local sandbox data?")) {
-            loadMockDashboardData();
+    if (!isConfigured || !db) {
+        if (confirm("Clear all locally saved visitor and inquiry records?")) {
+            [
+                'capturedLeads', 'visitorName', 'visitorEmail', 'visitorPhone',
+                'visitorPurpose', 'visitorLocation', 'visitorDevice', 'visitorType',
+                'siteVisited', 'visitTimestamp', 'phoneRevealed', 'phoneUnlocksCount',
+                'resumeDownloaded', 'resumeDownloadCount'
+            ].forEach(k => localStorage.removeItem(k));
+            loadLocalLeadsData();
+            showDashboardNotice("All local analytics and lead records cleared.", "success");
         }
         return;
     }
 
-    if (confirm("WARNING: Are you sure you want to clear ALL live telemetry data from Firebase? This cannot be undone.")) {
-        db.ref('visitors').remove()
+    if (confirm("WARNING: Are you sure you want to clear ALL live telemetry and leads data from Firebase? This cannot be undone.")) {
+        Promise.all([db.ref('visitors').remove(), db.ref('leads').remove()])
             .then(() => {
-                alert("Database logs cleared successfully.");
-                window.location.reload();
+                localStorage.removeItem('capturedLeads');
+                showDashboardNotice("All Firebase telemetry and leads cleared successfully.", "success");
+                setTimeout(() => window.location.reload(), 900);
             })
             .catch(err => {
-                alert("Failed to clear database logs: " + err.message);
+                showDashboardNotice("Failed to clear database logs: " + err.message, "error");
             });
     }
 }

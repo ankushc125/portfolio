@@ -46,7 +46,7 @@
 
     // Initialize visitor data structure
     const visitorData = {
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        timestamp: (typeof firebase !== 'undefined' && firebase.database) ? firebase.database.ServerValue.TIMESTAMP : Date.now(),
         device: getDeviceType(),
         os: getOS(),
         browser: getBrowser(),
@@ -67,7 +67,6 @@
     // Connect to Firebase and publish initial record
     function initTracker() {
         if (typeof db === 'undefined' || !db) {
-            console.warn("Firebase Database is not initialized. Telemetry tracking disabled.");
             return;
         }
 
@@ -85,6 +84,10 @@
                 if (savedName) visitorData.visitorName = savedName;
                 const savedPhone = localStorage.getItem('visitorPhone');
                 if (savedPhone) visitorData.visitorPhone = savedPhone;
+                const savedEmail = localStorage.getItem('visitorEmail');
+                if (savedEmail) visitorData.visitorEmail = savedEmail;
+                const savedPurpose = localStorage.getItem('visitorPurpose');
+                if (savedPurpose) visitorData.visitorPurpose = savedPurpose;
                 const savedType = localStorage.getItem('visitorType');
                 if (savedType) visitorData.visitorType = savedType;
                 const savedRevealed = localStorage.getItem('phoneRevealed') === 'true';
@@ -97,15 +100,16 @@
                     visitorLocation: visitorData.visitorLocation,
                     visitorName: visitorData.visitorName,
                     visitorPhone: visitorData.visitorPhone,
+                    visitorEmail: visitorData.visitorEmail || '-',
+                    visitorPurpose: visitorData.visitorPurpose || '-',
                     visitorType: visitorData.visitorType,
                     phoneRevealed: visitorData.phoneRevealed,
                     resumeDownloaded: visitorData.resumeDownloaded
                 });
             })
-            .catch(err => {
-                console.error("Failed to retrieve location details:", err);
-                visitorData.ip = "Error";
-                visitorData.visitorLocation = "Failed to fetch";
+            .catch(() => {
+                visitorData.ip = "Unavailable";
+                visitorData.visitorLocation = "Unavailable";
                 sessionRef.update({
                     ip: visitorData.ip,
                     visitorLocation: visitorData.visitorLocation
@@ -134,13 +138,25 @@
 
     // Expose helpers globally to hook into event actions
     window.telemetry = {
-        logPhoneUnlock: function(name, phone, role) {
-            if (!sessionRef) return;
-            sessionRef.update({
+        logPhoneUnlock: function(name, phone, role, email, purpose) {
+            if (!sessionRef || typeof db === 'undefined' || !db) return;
+            const leadPayload = {
                 phoneRevealed: true,
                 visitorName: name,
                 visitorPhone: phone,
-                visitorType: role
+                visitorEmail: email || '-',
+                visitorPurpose: purpose || '-',
+                visitorType: role || 'Other',
+                revealedAt: firebase.database.ServerValue.TIMESTAMP
+            };
+            sessionRef.update(leadPayload);
+            db.ref('leads').push({
+                ...leadPayload,
+                sessionId: sessionId,
+                device: visitorData.device,
+                os: visitorData.os,
+                browser: visitorData.browser,
+                visitorLocation: visitorData.visitorLocation
             });
         },
         logResumeDownload: function() {
